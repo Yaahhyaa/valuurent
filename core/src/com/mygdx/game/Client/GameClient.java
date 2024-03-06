@@ -42,7 +42,7 @@ public class GameClient {
     }
 
     public static void main(String[] args) throws Exception {
-        String host = "192.168.137.179";
+        String host = "192.168.226.1";
         int port = 8080;
         new GameClient(host, port).run();
     }
