@@ -1,6 +1,5 @@
 package com.mygdx.game.Screens;
 
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,61 +15,74 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Character.GameActor;
 import com.mygdx.game.ScreenGame;
 
+import javax.swing.*;
 
-/**
- * Created by julienvillegas on 17/01/2017.
- */
 public class TitleScreen implements Screen {
 
     private Stage stage;
     private Game game;
     GameActor background;
 
-    private Texture t;
     public TitleScreen(Game aGame) {
         game = aGame;
         stage = new Stage(new ScreenViewport());
 
-        background = new GameActor(0,0,new Texture("images/Startscreen.jpg"));
+        background = new GameActor(0, 0, new Texture("images/Startscreen.jpg"));
         stage.addActor(background);
 
-
-        Label title = new Label("Title Screen", ScreenGame.gameSkin,"big-black");
+        Label title = new Label("Welcome to valuurent", ScreenGame.gameSkin, "big-black");
         title.setAlignment(Align.center);
-        title.setY(Gdx.graphics.getHeight()*2/3);
+        title.setY(Gdx.graphics.getHeight() * 2 / 3);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
-        TextButton playButton = new TextButton("Play!",ScreenGame.gameSkin);
-        playButton.setWidth(Gdx.graphics.getWidth()/2);
-        playButton.setPosition(Gdx.graphics.getWidth()/2-playButton.getWidth()/2,Gdx.graphics.getHeight()/2-playButton.getHeight()/2);
-        playButton.addListener(new InputListener(){
+        TextButton playButton = new TextButton("Play!", ScreenGame.gameSkin);
+        playButton.setWidth(Gdx.graphics.getWidth() / 2);
+        playButton.setPosition(Gdx.graphics.getWidth() / 2 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - playButton.getHeight() / 2);
+        playButton.addListener(new InputListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new GameScreen(game));
             }
+
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
         });
         stage.addActor(playButton);
 
-        TextButton optionsButton = new TextButton("Options",ScreenGame.gameSkin);
-        optionsButton.setWidth(Gdx.graphics.getWidth()/2);
-        optionsButton.setPosition(Gdx.graphics.getWidth()/2-optionsButton.getWidth()/2,Gdx.graphics.getHeight()/4-optionsButton.getHeight()/2);
-        optionsButton.addListener(new InputListener(){
+        TextButton optionsButton = new TextButton("Options", ScreenGame.gameSkin);
+        optionsButton.setWidth(Gdx.graphics.getWidth() / 2);
+        optionsButton.setPosition(Gdx.graphics.getWidth() / 2 - optionsButton.getWidth() / 2, Gdx.graphics.getHeight() / 3 - optionsButton.getHeight() / 2);
+        optionsButton.addListener(new InputListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new OptionScreen(game));
             }
+
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
         });
         stage.addActor(optionsButton);
 
+        TextButton exitButton = new TextButton("Exit", ScreenGame.gameSkin);
+        exitButton.setWidth(Gdx.graphics.getWidth() / 2);
+        exitButton.setPosition(Gdx.graphics.getWidth() / 2 - exitButton.getWidth() / 2, Gdx.graphics.getHeight() / 6 - exitButton.getHeight() / 2);
+        exitButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.exit(); // Close the application when the "Exit" button is clicked
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(exitButton);
     }
 
     @Override
@@ -84,27 +96,22 @@ public class TitleScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-
     }
 
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override

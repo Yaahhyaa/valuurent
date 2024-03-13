@@ -58,7 +58,7 @@ public class GameScreen implements Screen {
             //if (Gdx.input.isKeyPressed(Input.Keys.UP)) gameActor.setY(gameActor.getY()+1);
             //if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) gameActor.setY(gameActor.getY()-1);
             stage.act();
-            feind.act(delta);
+            //feind.act(delta);
 
 
 
@@ -143,6 +143,6 @@ public class GameScreen implements Screen {
 
         stage.addActor(background);
         stage.addActor(gameActor);
-        stage.addActor(feind);
+        //stage.addActor(feind);
     }
 }
