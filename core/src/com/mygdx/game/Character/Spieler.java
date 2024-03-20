@@ -50,10 +50,10 @@ public class Spieler extends SpielObjekt{
             this.setY(this.getY() - speed);
         }
         //muss Grafikposition neu berechnen !!
-        this.setBoundary();
         this.direction = direction;
         this.setBoundary();
-        this.direction = direction;
+        this.getImage().setX(this.getX());
+        this.getImage().setY(this.getY());
     }
 
     public void act(float delta){

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Character.GameActor;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.ScreenGame;
 
 import javax.swing.*;
@@ -27,8 +28,8 @@ public class TitleScreen implements Screen {
         game = aGame;
         stage = new Stage(new ScreenViewport());
 
-        background = new GameActor(0, 0, new Texture("images/Startscreen.jpg"));
-        stage.addActor(background);
+        //background = new GameActor(0, 0, new Texture("images/Startscreen.jpg"));
+        //stage.addActor(background);
 
         Label title = new Label("Welcome to valuurent", ScreenGame.gameSkin, "big-black");
         title.setAlignment(Align.center);
@@ -42,7 +43,7 @@ public class TitleScreen implements Screen {
         playButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameScreen2(game));
             }
 
             @Override
