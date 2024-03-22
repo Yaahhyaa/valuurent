@@ -96,9 +96,7 @@ public class GameScreen2 implements Screen {
         stage.addActor(background);
         stage.addActor(gameActor);
         stage.addActor(spieler);
-        //stage.addActor(feind);;
-        //man eipfhiopfioüsjfsiojioscjsipcnipsjac
-        //fchöaskofnjopjkodfdfjsiopdsfjiop
+        //stage.addActor(feind);
     }
 
 }
