@@ -107,6 +107,7 @@ public class GameScreen2 implements Screen {
         //stage.addActor(gameActor);
         stage.addActor(spieler);
         //stage.addActor(feind); uiu
+        //jkiji
 
     }
 }
