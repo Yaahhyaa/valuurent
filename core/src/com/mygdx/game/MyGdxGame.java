@@ -43,10 +43,10 @@ public class MyGdxGame extends ApplicationAdapter {
 
         float delta = Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& spieler.getX()<750) spieler.move(1);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)&& spieler.getX()>0) spieler.move(0);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)&& spieler.getY()<580) spieler.move(2);
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)&& spieler.getY()>0) spieler.move(3);
+        //if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)&& spieler.getX()<750) spieler.move(1);
+        //if (Gdx.input.isKeyPressed(Input.Keys.LEFT)&& spieler.getX()>0) spieler.move(0);
+        //if (Gdx.input.isKeyPressed(Input.Keys.UP)&& spieler.getY()<580) spieler.move(2);
+        //if (Gdx.input.isKeyPressed(Input.Keys.DOWN)&& spieler.getY()>0) spieler.move(3);
 
 
         ScreenUtils.clear(1, 0, 0, 1);

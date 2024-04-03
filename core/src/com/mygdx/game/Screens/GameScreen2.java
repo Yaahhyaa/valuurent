@@ -46,10 +46,10 @@ public class GameScreen2 implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) spieler.move(1);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) spieler.move(0);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) spieler.move(2);
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) spieler.move(3);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && spieler.getX()<1600) spieler.move(1);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)&& spieler.getX()>0) spieler.move(0);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)&& spieler.getY()<780) spieler.move(2);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)&& spieler.getY()>0) spieler.move(3);
 
         stage.act(delta);
         stage.draw();
@@ -89,15 +89,15 @@ public class GameScreen2 implements Screen {
         //img = new Texture("images/jett.png");
 
         // Hintergrundmusik
-        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/Valorant_Main_Menu.mp3"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(0.5f);
-        backgroundMusic.play();
+        //backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/Valorant_Main_Menu.mp3"));
+        //backgroundMusic.setLooping(true);
+        //backgroundMusic.setVolume(0.5f);
+        //backgroundMusic.play();
 
         batch = new SpriteBatch();
 
 
-        spieler = new Spieler(100, 100, new Texture("images/jett.png"));
+        spieler = new Spieler(0, 0, new Texture("images/jett.png"));
 
         //gameActor = new GameActor(0, 0, new Texture("images/jett.png")); // Hier den gameActor initialisieren
         background = new GameActor(0,0,new Texture("images/Map.png"));

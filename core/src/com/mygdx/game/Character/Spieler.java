@@ -26,7 +26,11 @@ public class Spieler extends SpielObjekt{
         boundary = new Rectangle();
         this.setBoundary();
         atlas = new TextureAtlas(Gdx.files.internal("animation/jet.atlas"));
-        Array<TextureAtlas.AtlasRegion> frames = atlas.findRegions("a");
+
+        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
+        frames.add(atlas.findRegion("1"));
+        frames.add(atlas.findRegion("2"));
+
         animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
 }
     public Rectangle getBoundary() {
@@ -58,14 +62,50 @@ public class Spieler extends SpielObjekt{
         if (direction != this.direction){
             speed = 2;
         }
-
         speed += acceleration;
+
         if(direction == 1){
             this.setX(this.getX()+speed);
+
+            atlas = new TextureAtlas(Gdx.files.internal("animation/laufenJet.atlas"));
+            Array<TextureAtlas.AtlasRegion> frames = new Array<>();
+            frames.add(atlas.findRegion("laufen1"));
+            frames.add(atlas.findRegion("laufen2"));
+            frames.add(atlas.findRegion("laufen3"));
+            frames.add(atlas.findRegion("laufen4"));
+
+            for (TextureAtlas.AtlasRegion region : frames) {
+                region.flip(true, false);
+            }
+            animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
+
         }else if(direction == 0){
             this.setX(this.getX()-speed);
+            atlas = new TextureAtlas(Gdx.files.internal("animation/laufenJet.atlas"));
+            Array<TextureAtlas.AtlasRegion> frames = new Array<>();
+            frames.add(atlas.findRegion("laufen1"));
+            frames.add(atlas.findRegion("laufen2"));
+            frames.add(atlas.findRegion("laufen3"));
+            frames.add(atlas.findRegion("laufen4"));
+
+            animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
+
         }else if(direction == 2){
             this.setY(this.getY() + speed);
+            this.setX(this.getX()+speed);
+
+            atlas = new TextureAtlas(Gdx.files.internal("animation/laufenJet.atlas"));
+            Array<TextureAtlas.AtlasRegion> frames = new Array<>();
+            frames.add(atlas.findRegion("laufen1"));
+            frames.add(atlas.findRegion("laufen2"));
+            frames.add(atlas.findRegion("laufen3"));
+            frames.add(atlas.findRegion("laufen4"));
+
+            for (TextureAtlas.AtlasRegion region : frames) {
+                region.flip(false, true);
+            }
+            animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
+
         }else if (direction == 3){
             this.setY(this.getY() - speed);
         }
