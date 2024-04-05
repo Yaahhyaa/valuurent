@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 public class Spieler extends SpielObjekt{
     private Rectangle boundary;
     private float speed = 2f;
-    private float acceleration = 0.5f;
+    private float acceleration = 0f;
     private int direction = 0;
 
     private Animation<TextureRegion> animation;
@@ -32,7 +32,7 @@ public class Spieler extends SpielObjekt{
         frames.add(atlas.findRegion("2"));
 
         animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
-}
+    }
     public Rectangle getBoundary() {
         return boundary;
     }
@@ -60,7 +60,7 @@ public class Spieler extends SpielObjekt{
     public void move(int direction) {
 
         if (direction != this.direction){
-            speed = 2;
+            speed = 3f;
         }
         speed += acceleration;
 
@@ -92,7 +92,6 @@ public class Spieler extends SpielObjekt{
 
         }else if(direction == 2){
             this.setY(this.getY() + speed);
-            this.setX(this.getX()+speed);
 
             atlas = new TextureAtlas(Gdx.files.internal("animation/laufenJet.atlas"));
             Array<TextureAtlas.AtlasRegion> frames = new Array<>();
@@ -102,12 +101,26 @@ public class Spieler extends SpielObjekt{
             frames.add(atlas.findRegion("laufen4"));
 
             for (TextureAtlas.AtlasRegion region : frames) {
-                region.flip(false, true);
+                region.flip(false, false);
             }
             animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
 
         }else if (direction == 3){
             this.setY(this.getY() - speed);
+
+            atlas = new TextureAtlas(Gdx.files.internal("animation/laufenJet.atlas"));
+            Array<TextureAtlas.AtlasRegion> frames = new Array<>();
+            frames.add(atlas.findRegion("laufen1"));
+            frames.add(atlas.findRegion("laufen2"));
+            frames.add(atlas.findRegion("laufen3"));
+            frames.add(atlas.findRegion("laufen4"));
+
+            for (TextureAtlas.AtlasRegion region : frames) {
+                region.flip(true, false);
+            }
+            animation = new Animation<>(0.1f, frames, Animation.PlayMode.LOOP);
+
+
         }
         //muss Grafikposition neu berechnen !!
         this.direction = direction;

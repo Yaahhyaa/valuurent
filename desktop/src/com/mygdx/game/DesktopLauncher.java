@@ -9,7 +9,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
-		config.setWindowedMode(1800,980);
+		config.setWindowedMode(1800,800);
 		config.setTitle("Valuurent");
 		new Lwjgl3Application(new ScreenGame(), config);
 	}
