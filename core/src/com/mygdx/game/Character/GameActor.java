@@ -3,6 +3,7 @@ package com.mygdx.game.Character;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g3d.model.Animation;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,6 +16,7 @@ public class GameActor extends SpielObjekt {
     private double geschwindigkeit = 2;
     private double beschleunigung = 0.1;
 
+    private Animation actualAnimation;
 
     private Circle circle;
 
