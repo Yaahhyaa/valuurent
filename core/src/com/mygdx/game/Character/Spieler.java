@@ -121,4 +121,6 @@ public class Spieler extends SpielObjekt {
     public boolean collidRectangle(Rectangle shape) {
         return Intersector.overlaps(this.boundary, shape);
     }
+
+    //nice
 }
