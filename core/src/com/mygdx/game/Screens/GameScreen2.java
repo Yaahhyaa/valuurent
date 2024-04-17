@@ -47,9 +47,9 @@ public class GameScreen2 implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spieler.move(-1);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && spieler.getX()<1600) spieler.move(1);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && spieler.getX()<1780) spieler.move(1);
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)&& spieler.getX()>0) spieler.move(0);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)&& spieler.getY()<780) spieler.move(2);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)&& spieler.getY()<315) spieler.move(2);
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)&& spieler.getY()>0) spieler.move(3);
 
         stage.act(delta);
