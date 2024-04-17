@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class Spieler extends SpielObjekt {
     private Rectangle boundary;
-    private float speed = 9f;
+    private float speed = 2f;
     private float acceleration = 0f;
     private int direction = 0;
 
