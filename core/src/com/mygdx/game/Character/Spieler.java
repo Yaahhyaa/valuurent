@@ -1,6 +1,7 @@
 package com.mygdx.game.Character;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -20,6 +21,7 @@ public class Spieler extends SpielObjekt {
     private Animation<TextureRegion> animationlaufen;
     private Animation<TextureRegion> animationrechts;
     private Animation<TextureRegion> animationIdle;
+    private Animation<TextureRegion> animationschiessen;
     private Animation<TextureRegion> animationSterben;
 
     private TextureRegion currentFrame;
@@ -39,6 +41,8 @@ public class Spieler extends SpielObjekt {
         animationIdle = new Animation<>(0.1f, atlas.findRegions("idle"), Animation.PlayMode.LOOP);
         animationlaufen = new Animation<>(0.1f, atlas.findRegions("laufen"), Animation.PlayMode.LOOP);
         animationrechts = new Animation<>(0.1f, atlas.findRegions("laufen"), Animation.PlayMode.LOOP);
+        animationschiessen = new Animation<>(0.1f, atlas.findRegions("shoot"), Animation.PlayMode.LOOP);
+
         for ( TextureRegion cFrame : animationrechts.getKeyFrames()) {
             cFrame.flip(true, false);
         }
@@ -99,6 +103,9 @@ public class Spieler extends SpielObjekt {
             animation = animationIdle;
         }
 
+        if(Gdx.input.isKeyPressed(Input.Keys.F)){
+            animation = animationschiessen;
+        }
         // Grafikposition neu berechnen
         this.direction = direction;
         this.setBoundary();
