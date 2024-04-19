@@ -37,13 +37,13 @@ public class TitleScreen implements Screen {
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
-        TextButton playButton = new TextButton("Play!", ScreenGame.gameSkin);
+        TextButton playButton = new TextButton("Beginn Adventure!", ScreenGame.gameSkin);
         playButton.setWidth(Gdx.graphics.getWidth() / 2);
         playButton.setPosition(Gdx.graphics.getWidth() / 2 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - playButton.getHeight() / 2);
         playButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new GameScreen2(game));
+                game.setScreen(new GameScreen(game));
             }
 
             @Override
