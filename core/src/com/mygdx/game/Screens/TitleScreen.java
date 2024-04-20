@@ -1,5 +1,7 @@
 package com.mygdx.game.Screens;
 
+//Auswahl screeen
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -19,17 +21,13 @@ import com.mygdx.game.ScreenGame;
 import javax.swing.*;
 
 public class TitleScreen implements Screen {
-
     private Stage stage;
     private Game game;
-    GameActor background;
+    private GameScreen2 gameScreen2;
 
     public TitleScreen(Game aGame) {
         game = aGame;
         stage = new Stage(new ScreenViewport());
-
-        //background = new GameActor(0, 0, new Texture("images/Startscreen.jpg"));
-        //stage.addActor(background);
 
         Label title = new Label("Welcome to valuurent", ScreenGame.gameSkin, "big-black");
         title.setAlignment(Align.center);
@@ -37,13 +35,13 @@ public class TitleScreen implements Screen {
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
-        TextButton playButton = new TextButton("Beginn Adventure!", ScreenGame.gameSkin);
-        playButton.setWidth(Gdx.graphics.getWidth() / 2);
+        TextButton playButton = new TextButton("Arena", ScreenGame.gameSkin);
+        playButton.setWidth(Gdx.graphics.getWidth() / 4);
         playButton.setPosition(Gdx.graphics.getWidth() / 2 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - playButton.getHeight() / 2);
         playButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(gameScreen2);
             }
 
             @Override
@@ -54,7 +52,7 @@ public class TitleScreen implements Screen {
         stage.addActor(playButton);
 
         TextButton optionsButton = new TextButton("Options", ScreenGame.gameSkin);
-        optionsButton.setWidth(Gdx.graphics.getWidth() / 2);
+        optionsButton.setWidth(Gdx.graphics.getWidth() / 4);
         optionsButton.setPosition(Gdx.graphics.getWidth() / 2 - optionsButton.getWidth() / 2, Gdx.graphics.getHeight() / 3 - optionsButton.getHeight() / 2);
         optionsButton.addListener(new InputListener() {
             @Override
@@ -69,38 +67,33 @@ public class TitleScreen implements Screen {
         });
         stage.addActor(optionsButton);
 
-        TextButton exitButton = new TextButton("Exit", ScreenGame.gameSkin);
-        exitButton.setWidth(Gdx.graphics.getWidth() / 2);
-        exitButton.setPosition(Gdx.graphics.getWidth() / 2 - exitButton.getWidth() / 2, Gdx.graphics.getHeight() / 6 - exitButton.getHeight() / 2);
-        exitButton.addListener(new InputListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit(); // Close the application when the "Exit" button is clicked
-            }
+        // Weitere Buttons und Elemente hier hinzufügen...
 
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
-        stage.addActor(exitButton);
+        gameScreen2 = new GameScreen2(game);
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Rendere den GameScreen2
+        gameScreen2.render(delta);
+
+        // Rendere den TitleScreen über dem GameScreen2
         stage.act();
         stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+        gameScreen2.resize(width, height);
     }
 
     @Override
@@ -118,5 +111,6 @@ public class TitleScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        gameScreen2.dispose();
     }
 }

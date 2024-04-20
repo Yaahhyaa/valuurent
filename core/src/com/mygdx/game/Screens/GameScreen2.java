@@ -1,7 +1,6 @@
 package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -64,12 +63,10 @@ public class GameScreen2 implements Screen {
 
     private void initStage() {
         Texture spielerTexture = new Texture("images/jett.png");
-        spieler = new Spieler(0, 0, spielerTexture);
+        spieler = new Spieler((int)spieler.getX(), (int)spieler.getY(), spielerTexture); // Setze die Startposition des Spielers auf (1800, 0)
         background = new GameActor(0, 0, new Texture("images/Map.png"));
         stage.addActor(background);
         stage.addActor(spieler);
         Gdx.input.setInputProcessor(stage);
-
-
     }
 }

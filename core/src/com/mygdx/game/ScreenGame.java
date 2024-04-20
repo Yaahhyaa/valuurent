@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Screens.GameScreen;
 import com.mygdx.game.Screens.TitleScreen;
 
 public class ScreenGame extends Game {
@@ -15,7 +16,7 @@ public class ScreenGame extends Game {
 
 	public void create () {
 		gameSkin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-		this.setScreen(new TitleScreen(this));
+		this.setScreen(new GameScreen(this));
 	}
 
 	public void render () {
