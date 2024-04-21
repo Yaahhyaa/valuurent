@@ -44,11 +44,6 @@ public class GameScreen implements Screen {
         if (!gameEnd) {
             // Handle game logic
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new TitleScreen(game));
-            dispose(); // Aufräumen der aktuellen Screen-Ressourcen
-            return;
-        }
 
         stage.act();
         stage.draw();
@@ -94,6 +89,25 @@ public class GameScreen implements Screen {
             }
         });
         stage.addActor(exitButton);
+
+        Texture Setting = new Texture(Gdx.files.internal("images/Ready.png")); // Laden des Bildes
+        ImageButtonStyle sstyle = new ImageButtonStyle();
+        sstyle.imageUp = new TextureRegionDrawable(new TextureRegion(Setting));
+        ImageButton Settingbutton = new ImageButton(sstyle);
+        Settingbutton.setPosition(1299, 640);
+        Settingbutton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new OptionScreen(game)); // Wechsle zu GameScreen2, wenn der Button losgelassen wird
+            }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(Settingbutton);
+
+
     }
 
     @Override

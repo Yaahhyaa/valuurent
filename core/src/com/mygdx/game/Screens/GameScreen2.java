@@ -11,20 +11,28 @@ import com.mygdx.game.Character.Spieler;
 public class GameScreen2 implements Screen {
     private Game game;
     private Stage stage;
-    private Spieler spieler;
+    private static Spieler spieler; // Statische Variable für den Spieler
     private GameActor background;
+    private boolean initialized;
 
     public GameScreen2(Game aGame) {
         game = aGame;
         stage = new Stage(new ScreenViewport());
-        initStage();
+        initialized = false;
     }
 
     @Override
-    public void show() {}
+    public void show() {
+        if (!initialized) {
+            initStage();
+            initialized = true;
+        }
+    }
 
     @Override
     public void render(float delta) {
+        if (!initialized) return; // Abbrechen, wenn der Bildschirm nicht initialisiert wurde
+
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -40,30 +48,43 @@ public class GameScreen2 implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new TitleScreen(game));
             dispose();
+
             return;
         }
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+
+    }
 
     @Override
-    public void pause() {}
+    public void pause() {
+
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+
+    }
 
     @Override
     public void dispose() {
-        stage.dispose();
+
     }
+
+    // Andere Methoden wie zuvor
 
     private void initStage() {
         Texture spielerTexture = new Texture("images/jett.png");
-        spieler = new Spieler((int)spieler.getX(), (int)spieler.getY(), spielerTexture); // Setze die Startposition des Spielers auf (1800, 0)
+        if (spieler == null) {
+            spieler = new Spieler(1800, 0, spielerTexture); // Erstelle den Spieler, wenn er noch nicht existiert
+        }
         background = new GameActor(0, 0, new Texture("images/Map.png"));
         stage.addActor(background);
         stage.addActor(spieler);
