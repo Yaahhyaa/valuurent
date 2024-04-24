@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.Screens.GameScreen2;
 
 public class Spieler extends SpielObjekt {
     private Rectangle boundary;
@@ -22,15 +23,14 @@ public class Spieler extends SpielObjekt {
     private Animation<TextureRegion> animationrechts;
     private Animation<TextureRegion> animationIdle;
     private Animation<TextureRegion> animationschiessen;
-    private Animation<TextureRegion> animationSterben;
 
     private TextureRegion currentFrame;
     private TextureAtlas atlas;
     private boolean isAnimation = true;
     private float stateTime = 0;
-    private boolean flip = false;
+    private GameScreen2 gameScreen;
 
-    public Spieler(int x, int y, Texture image) {
+    public Spieler(int x, int y, Texture image, GameScreen2 gameScreen) {
         super(x, y, image);
         boundary = new Rectangle();
         this.setBoundary();
@@ -43,11 +43,12 @@ public class Spieler extends SpielObjekt {
         animationrechts = new Animation<>(0.1f, atlas.findRegions("laufen"), Animation.PlayMode.LOOP);
         animationschiessen = new Animation<>(0.1f, atlas.findRegions("shoot"), Animation.PlayMode.LOOP);
 
-        for ( TextureRegion cFrame : animationrechts.getKeyFrames()) {
+        for (TextureRegion cFrame : animationrechts.getKeyFrames()) {
             cFrame.flip(true, false);
         }
         animation = animationIdle;
 
+        this.gameScreen = gameScreen;
     }
 
     public Rectangle getBoundary() {
@@ -63,7 +64,6 @@ public class Spieler extends SpielObjekt {
         if (isAnimation) {
             currentFrame = animation.getKeyFrame(stateTime, true);
             b.draw(currentFrame, this.getX(), this.getY());
-
         }
     }
 
@@ -78,35 +78,31 @@ public class Spieler extends SpielObjekt {
         }
         speed += acceleration;
 
-        if ((direction != olddirection) && (direction == 0 || direction == 1)){
+        if ((direction != olddirection) && (direction == 0 || direction == 1)) {
             animation = animationlaufen;
         }
-
-        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
-        atlas = new TextureAtlas(Gdx.files.internal("animation/jet.atlas"));
-
 
         if (direction == 1) {
             this.setX(this.getX() + speed);
             animation = animationrechts;
-
         } else if (direction == 0) {
             this.setX(this.getX() - speed);
             animation = animationlaufen;
-        }else if (direction == 2) {
+        } else if (direction == 2) {
             this.setY(this.getY() + speed);
-            animation=animationlaufen;
+            animation = animationlaufen;
         } else if (direction == 3) {
             this.setY(this.getY() - speed);
-             animation=animationlaufen;
+            animation = animationlaufen;
         } else {
             animation = animationIdle;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.F)){
+        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
             animation = animationschiessen;
+            shoot();
         }
-        // Grafikposition neu berechnen
+
         this.direction = direction;
         this.setBoundary();
         this.getImage().setX(this.getX());
@@ -122,5 +118,9 @@ public class Spieler extends SpielObjekt {
         return Intersector.overlaps(this.boundary, shape);
     }
 
-    //nice
+    public void shoot() {
+        float mouseX = Gdx.input.getX();
+        float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+        gameScreen.spawnBullet(this, mouseX, mouseY);
+    }
 }
