@@ -50,12 +50,20 @@ public class GameScreen2 implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.UP) && spieler.getY() < 315) spieler.move(2);
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && spieler.getY() > 0) spieler.move(3);
 
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            float mouseX = Gdx.input.getX();
+            float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+            if (spieler != null) spawnBullet(spieler, mouseX, mouseY);
+        }
+
         if (spieler.getBoundary().overlaps(hitbox.getBounds())) {
             spieler.setPosition(previousX, previousY);
         } else {
             previousX = spieler.getX();
             previousY = spieler.getY();
         }
+
 
         stage.act(delta);
         stage.draw();

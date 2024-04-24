@@ -1,41 +1,42 @@
 package com.mygdx.game.Character;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Bullet extends Actor {
-    private Texture texture;
-    private Vector2 position;
-    private Rectangle bounds;
-    private Vector2 direction;
+    private TextureRegion textureRegion;
     private float speed;
+    private float directionX;
+    private float directionY;
 
     public Bullet(float x, float y, float speed, float directionX, float directionY, Texture texture) {
-        this.position = new Vector2(x, y);
-        this.bounds = new Rectangle(x, y, texture.getWidth(), texture.getHeight());
         this.speed = speed;
-        this.direction = new Vector2(directionX, directionY).nor();
-        this.texture = texture;
+        this.directionX = directionX;
+        this.directionY = directionY;
+        this.textureRegion = new TextureRegion(texture);
+
+        setX(x);
+        setY(y);
+        setWidth(texture.getWidth());
+        setHeight(texture.getHeight());
+        setOrigin(getWidth() / 2f, getHeight() / 2f);
+        setRotation((float) Math.atan2(directionY, directionX) * 180f / MathUtils.PI);
     }
 
-    public void update(float delta) {
-        position.x += speed * direction.x * delta;
-        position.y += speed * direction.y * delta;
-        bounds.setPosition(position);
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+        moveBy(speed * directionX * delta, speed * directionY * delta);
+
+        // Check for collision or bounds here and handle appropriately
     }
 
-    public void render(SpriteBatch batch) {
-        batch.draw(texture, position.x, position.y);
-    }
-
-    public Rectangle getBounds() {
-        return bounds;
-    }
-
-    public void dispose() {
-        texture.dispose();
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw(textureRegion, getX(), getY(), getOriginX(), getOriginY(),
+                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
 }

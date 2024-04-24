@@ -30,7 +30,7 @@ public class Spieler extends SpielObjekt {
     private float stateTime = 0;
     private GameScreen2 gameScreen;
 
-    public Spieler(int x, int y, Texture image, GameScreen2 gameScreen) {
+    public Spieler(int x, int y, Texture image) {
         super(x, y, image);
         boundary = new Rectangle();
         this.setBoundary();
