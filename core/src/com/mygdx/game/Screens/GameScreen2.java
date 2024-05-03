@@ -18,6 +18,10 @@ public class GameScreen2 implements Screen {
     private GameActor background;
     private boolean initialized;
     private Hitbox hitbox;
+    private Hitbox hitbox1;
+    private Hitbox hitbox2;
+    private Hitbox hitbox3;
+    private Hitbox hitbox4;
     private float previousX;
     private float previousY;
     private static final float BULLET_SPEED = 1000;
@@ -26,7 +30,9 @@ public class GameScreen2 implements Screen {
         game = aGame;
         stage = new Stage(new ScreenViewport());
         initialized = false;
-        hitbox = new Hitbox(1520, 370, 32, 15);
+        hitbox  = new Hitbox(1530, 390, 32, 15);
+        //hitbox1 = new Hitbox(1800, 30, 35, 40);
+        hitbox2 = new Hitbox(1320, 240, 32, 1);
     }
 
     @Override
@@ -45,10 +51,10 @@ public class GameScreen2 implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         spieler.move(-1);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && spieler.getX() < 1780) spieler.move(1);
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && spieler.getX() > 1125) spieler.move(0);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && spieler.getY() < 315) spieler.move(2);
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && spieler.getY() > 0) spieler.move(3);
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && spieler.getX() < 1780) spieler.move(1);
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && spieler.getX() > 980) spieler.move(0);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && spieler.getY() < 315) spieler.move(2);
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && spieler.getY() > 0) spieler.move(3);
 
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
@@ -57,12 +63,16 @@ public class GameScreen2 implements Screen {
             if (spieler != null) spawnBullet(spieler, mouseX, mouseY);
         }
 
-        if (spieler.getBoundary().overlaps(hitbox.getBounds())) {
+        if (spieler.getBoundary().overlaps(hitbox.getBounds()) ||
+                //spieler.getBoundary().overlaps(hitbox1.getBounds()) ||
+                spieler.getBoundary().overlaps(hitbox2.getBounds())) {
             spieler.setPosition(previousX, previousY);
         } else {
             previousX = spieler.getX();
             previousY = spieler.getY();
         }
+
+
 
 
         stage.act(delta);
