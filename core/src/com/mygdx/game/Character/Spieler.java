@@ -30,7 +30,7 @@ public class Spieler extends SpielObjekt {
     private float stateTime = 0;
     private GameScreen2 gameScreen;
 
-    public Spieler(int x, int y, Texture image) {
+    public Spieler(int x, int y, Texture image, GameScreen2 gameScreen) {
         super(x, y, image);
         boundary = new Rectangle();
         this.setBoundary();
@@ -98,8 +98,6 @@ public class Spieler extends SpielObjekt {
             animation = animationIdle;
         }
 
-
-
         this.direction = direction;
         this.setBoundary();
         this.getImage().setX(this.getX());
@@ -119,5 +117,17 @@ public class Spieler extends SpielObjekt {
         float mouseX = Gdx.input.getX();
         float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
         gameScreen.spawnBullet(this, mouseX, mouseY);
+    }
+
+    public int getHealth() {
+        return 100; // Return actual health value
+    }
+
+    public float getMaxHealth() {
+        return 100; // Return actual max health value
+    }
+
+    public void decreaseHealth(int i) {
+        // Implement health decrease logic here
     }
 }

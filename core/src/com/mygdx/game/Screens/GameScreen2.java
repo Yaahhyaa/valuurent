@@ -10,6 +10,7 @@ import com.mygdx.game.Character.Bullet;
 import com.mygdx.game.Character.GameActor;
 import com.mygdx.game.Character.Hitbox;
 import com.mygdx.game.Character.Spieler;
+import com.mygdx.game.actors.HealthBar;
 
 public class GameScreen2 implements Screen {
     private Game game;
@@ -18,20 +19,18 @@ public class GameScreen2 implements Screen {
     private GameActor background;
     private boolean initialized;
     private Hitbox hitbox;
-    private Hitbox hitbox1;
     private Hitbox hitbox2;
-    private Hitbox hitbox3;
-    private Hitbox hitbox4;
     private float previousX;
     private float previousY;
     private static final float BULLET_SPEED = 1000;
+
+    private HealthBar healthBar;
 
     public GameScreen2(Game aGame) {
         game = aGame;
         stage = new Stage(new ScreenViewport());
         initialized = false;
-        hitbox  = new Hitbox(1530, 390, 32, 15);
-        //hitbox1 = new Hitbox(1800, 30, 35, 40);
+        hitbox = new Hitbox(1530, 390, 32, 15);
         hitbox2 = new Hitbox(1320, 240, 32, 1);
     }
 
@@ -56,24 +55,23 @@ public class GameScreen2 implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.W) && spieler.getY() < 315) spieler.move(2);
         if (Gdx.input.isKeyPressed(Input.Keys.S) && spieler.getY() > 0) spieler.move(3);
 
-
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             float mouseX = Gdx.input.getX();
             float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
-            if (spieler != null) spawnBullet(spieler, mouseX, mouseY);
+            if (spieler != null) spieler.shoot();
         }
 
         if (spieler.getBoundary().overlaps(hitbox.getBounds()) ||
-                //spieler.getBoundary().overlaps(hitbox1.getBounds()) ||
                 spieler.getBoundary().overlaps(hitbox2.getBounds())) {
             spieler.setPosition(previousX, previousY);
+            spieler.decreaseHealth(15); // Wenn der Spieler getroffen wird, werden 15 HP abgezogen
         } else {
             previousX = spieler.getX();
             previousY = spieler.getY();
         }
 
-
-
+        healthBar.setPosition(10, Gdx.graphics.getHeight() - 30); // Position des Balkens
+        healthBar.act(delta);
 
         stage.act(delta);
         stage.draw();
@@ -104,12 +102,15 @@ public class GameScreen2 implements Screen {
     private void initStage() {
         Texture spielerTexture = new Texture("images/jett.png");
         if (spieler == null) {
-            spieler = new Spieler(1800, 0, spielerTexture);
+            spieler = new Spieler(1800, 0, spielerTexture, this);
         }
         background = new GameActor(0, 0, new Texture("images/Map.png"));
         stage.addActor(background);
         stage.addActor(spieler);
         Gdx.input.setInputProcessor(stage);
+
+        healthBar = new HealthBar(spieler, 200, 20); // Breite und Höhe des Balkens
+        stage.addActor(healthBar); // Hinzufügen des healthBar Actors zur Bühne
     }
 
     @Override

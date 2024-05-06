@@ -78,6 +78,7 @@ public class GameScreen implements Screen {
         currentFrame = animation.getKeyFrame(stateTime, true);
         // Setzen der Größe des Jets mit setSize
         float jetWidth = 180; // Neue Breite des Jets
+
         float jetHeight = 275; // Neue Höhe des Jets
         float jetX = 815; // X-Position des Jets
         float jetY = 150; // Y-Position des Jets
