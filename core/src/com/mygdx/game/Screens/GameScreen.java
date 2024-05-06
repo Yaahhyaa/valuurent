@@ -1,18 +1,17 @@
 package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Character.GameActor;
 
@@ -23,6 +22,12 @@ public class GameScreen implements Screen {
     private boolean gameEnd = false;
     private GameActor background;
     private TextField textField;
+    private TextureAtlas atlas;
+    private TextureRegion currentFrame;
+    private Animation<TextureRegion> animation;
+    private Music backgroundMusic;
+    private Batch b;
+    private float stateTime = 0;
 
     public GameScreen(Game aGame) {
         game = aGame;
@@ -41,6 +46,11 @@ public class GameScreen implements Screen {
                 return false;
             }
         });
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/Valorant_Main_Menu.mp3"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(1.0f);
+        backgroundMusic.play();
     }
 
     @Override
@@ -58,8 +68,21 @@ public class GameScreen implements Screen {
             // Handle game logic
         }
 
+
+
         stage.act();
         stage.draw();
+
+        b.begin();
+        stateTime += delta;
+        currentFrame = animation.getKeyFrame(stateTime, true);
+        // Setzen der Größe des Jets mit setSize
+        float jetWidth = 180; // Neue Breite des Jets
+        float jetHeight = 275; // Neue Höhe des Jets
+        float jetX = 815; // X-Position des Jets
+        float jetY = 150; // Y-Position des Jets
+        b.draw(currentFrame, jetX, jetY, jetWidth, jetHeight); // Zeichnen des Jets mit der neuen Größe
+        b.end();
     }
 
     // Other overridden methods
@@ -68,9 +91,16 @@ public class GameScreen implements Screen {
         background = new GameActor(0, 0, new Texture("images/Lobby.png"));
         stage.addActor(background);
         // Add other initialization logic here
+
+        atlas = new TextureAtlas(Gdx.files.internal("animation/jet.atlas"));
+        animation = new Animation<>(0.1f, atlas.findRegions("idle"), Animation.PlayMode.LOOP);
+        b = new SpriteBatch();
+
     }
 
     public void showButtons() {
+
+
 
         ImageButtonStyle submitStyle = new ImageButtonStyle();
 // Setzen Sie hier die gewünschten Attribute für submitStyle
@@ -247,5 +277,9 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        if (backgroundMusic != null) {
+            backgroundMusic.stop();
+            backgroundMusic.dispose();
+        }
     }
 }

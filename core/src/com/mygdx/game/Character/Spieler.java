@@ -98,10 +98,7 @@ public class Spieler extends SpielObjekt {
             animation = animationIdle;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-            animation = animationschiessen;
-            shoot();
-        }
+
 
         this.direction = direction;
         this.setBoundary();
