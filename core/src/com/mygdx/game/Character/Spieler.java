@@ -29,6 +29,7 @@ public class Spieler extends SpielObjekt {
     private boolean isAnimation = true;
     private float stateTime = 0;
     private GameScreen2 gameScreen;
+    private int health=100;
 
     public Spieler(int x, int y, Texture image, GameScreen2 gameScreen) {
         super(x, y, image);
@@ -120,7 +121,7 @@ public class Spieler extends SpielObjekt {
     }
 
     public int getHealth() {
-        return 100; // Return actual health value
+        return  health; // Return actual health value
     }
 
     public float getMaxHealth() {
@@ -129,5 +130,6 @@ public class Spieler extends SpielObjekt {
 
     public void decreaseHealth(int i) {
         // Implement health decrease logic here
+        health = health - i;
     }
 }
