@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Character.Bullet;
-import com.mygdx.game.Character.GameActor;
-import com.mygdx.game.Character.Hitbox;
-import com.mygdx.game.Character.Spieler;
+import com.mygdx.game.Character.*;
 import com.mygdx.game.actors.HealthBar;
 
 import java.util.ArrayList;
@@ -25,14 +22,13 @@ public class GameScreen2 implements Screen {
     private Hitbox hitbox2;
     private Hitbox hitbox3;
     private Hitbox hitbox4;
-    private float previousX;
     private float previousY;
+    private float previousX;
     private static final float BULLET_SPEED = 1000;
-
     private ArrayList<Bullet> bullets;
     private int shotCounter; // Zähler für abgefeuerte Schüsse
     private float shotCooldownTimer; // Timer für Cooldown zwischen den Schüssen
-    private static final int SHOT_LIMIT = 7;
+    private static final int SHOT_LIMIT = 20;
     private static final float COOLDOWN_DURATION = 5f; // Cooldown-Dauer in Sekunden
     private HealthBar healthBar;
 
@@ -104,9 +100,9 @@ public class GameScreen2 implements Screen {
         }
 
         if (spieler.getBoundary().overlaps(hitbox.getBounds()) ||
-                spieler.getBoundary().overlaps(hitbox2.getBounds()) ||
                 spieler.getBoundary().overlaps(hitbox3.getBounds()) ||
-                spieler.getBoundary().overlaps(hitbox4.getBounds())) {
+                spieler.getBoundary().overlaps(hitbox4.getBounds()) ||
+                spieler.getBoundary().overlaps(hitbox2.getBounds())) {
             spieler.setPosition(previousX, previousY);
             spieler.decreaseHealth(15); // Wenn der Spieler getroffen wird, werden 15 HP abgezogen
         } else {
@@ -179,5 +175,3 @@ public class GameScreen2 implements Screen {
         stage.dispose();
     }
 }
-
-//haloo

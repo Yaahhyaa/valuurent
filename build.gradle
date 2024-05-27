@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath 'org.docstr:gwt-gradle-plugin:1.1.29'
         classpath 'org.gretty:gretty:3.1.0'
+
         
 
     }
@@ -77,5 +78,6 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation 'io.netty:netty-all:4.1.68.Final'
+        implementation 'org.java-websocket:Java-WebSocket:1.5.2'
     }
 }
