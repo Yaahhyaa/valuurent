@@ -79,5 +79,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         implementation 'io.netty:netty-all:4.1.68.Final'
         implementation 'org.java-websocket:Java-WebSocket:1.5.2'
+        implementation 'com.google.code.gson:gson:2.8.8'
+        implementation 'org.json:json:20210307'
     }
 }

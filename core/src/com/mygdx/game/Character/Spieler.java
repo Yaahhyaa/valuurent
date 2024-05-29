@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Screens.GameScreen2;
 
@@ -29,9 +30,9 @@ public class Spieler extends SpielObjekt {
     private boolean isAnimation = true;
     private float stateTime = 0;
     private GameScreen2 gameScreen;
-    private int health=100;
+    private int health = 100;
 
-    public Spieler(int x, int y, Texture image, GameScreen2 gameScreen) {
+    public Spieler(int x, int y, Texture image) {
         super(x, y, image);
         boundary = new Rectangle();
         this.setBoundary();
@@ -105,6 +106,10 @@ public class Spieler extends SpielObjekt {
         this.getImage().setY(this.getY());
     }
 
+    public Vector2 getCoordinates() {
+        return new Vector2(getX(), getY());
+    }
+
     public void act(float delta) {
         super.act(delta);
         this.update(delta);
@@ -121,15 +126,14 @@ public class Spieler extends SpielObjekt {
     }
 
     public int getHealth() {
-        return  health; // Return actual health value
+        return health;
     }
 
     public float getMaxHealth() {
-        return 100; // Return actual max health value
+        return 100;
     }
 
     public void decreaseHealth(int i) {
-        // Implement health decrease logic here
         health = health - i;
     }
 }

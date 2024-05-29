@@ -6,31 +6,40 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Character.*;
-import com.mygdx.game.actors.HealthBar;
+import com.mygdx.game.Character.Bullet;
+import com.mygdx.game.Character.GameActor;
+import com.mygdx.game.Character.Hitbox;
+import com.mygdx.game.Character.Spieler;
+import com.mygdx.game.Character.HealthBar;
+import com.mygdx.game.Client.GameWebSocketClient;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class GameScreen2 implements Screen {
     private Game game;
     private Stage stage;
-    private static Spieler spieler;
+    private Spieler localPlayer;
+    private Spieler remotePlayer;
     private GameActor background;
     private boolean initialized;
     private Hitbox hitbox;
-    private Hitbox hitbox1;
     private Hitbox hitbox2;
     private Hitbox hitbox3;
     private Hitbox hitbox4;
-    private float previousY;
     private float previousX;
+    private float previousY;
     private static final float BULLET_SPEED = 1000;
     private ArrayList<Bullet> bullets;
-    private int shotCounter; // Zähler für abgefeuerte Schüsse
-    private float shotCooldownTimer; // Timer für Cooldown zwischen den Schüssen
+    private int shotCounter;
+    private float shotCooldownTimer;
     private static final int SHOT_LIMIT = 20;
-    private static final float COOLDOWN_DURATION = 5f; // Cooldown-Dauer in Sekunden
-    private HealthBar healthBar;
+    private static final float COOLDOWN_DURATION = 5f;
+    private HealthBar localHealthBar;
+    private HealthBar remoteHealthBar;
+    private GameWebSocketClient webSocketClient;
 
     public GameScreen2(Game aGame) {
         game = aGame;
@@ -43,6 +52,13 @@ public class GameScreen2 implements Screen {
         bullets = new ArrayList<>();
         shotCounter = 0;
         shotCooldownTimer = 0;
+
+        try {
+            webSocketClient = new GameWebSocketClient(this);
+            webSocketClient.connect();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -60,58 +76,17 @@ public class GameScreen2 implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        spieler.move(-1);
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && spieler.getX() < 1780) spieler.move(1);
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && spieler.getX() > 980) spieler.move(0);
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && spieler.getY() < 315) spieler.move(2);
-        if (Gdx.input.isKeyPressed(Input.Keys.S) && spieler.getY() > 0) spieler.move(3);
+        handleInput(delta);
 
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            if (shotCooldownTimer <= 0) {
-                float mouseX = Gdx.input.getX();
-                float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
-                if (spieler != null) {
-                    spawnBullet(spieler, mouseX, mouseY);
-                    shotCounter++;
-                    if (shotCounter >= SHOT_LIMIT) {
-                        shotCooldownTimer = COOLDOWN_DURATION;
-                        shotCounter = 0; // Zurücksetzen des Schusszählers nach dem Cooldown
-                    }
-                }
-            }
-        }
-
-        // Reduziere den Cooldown-Timer
-        if (shotCooldownTimer > 0) {
-            shotCooldownTimer -= delta;
-        }
-
-        // Überprüfe Kollisionen zwischen Kugeln und Hitboxen
-        for (Bullet bullet : new ArrayList<>(bullets)) {
-            bullet.update(delta);
-            stage.addActor(bullet);
-            for (Hitbox currentHitbox : new Hitbox[]{hitbox, hitbox2, hitbox3, hitbox4}) {
-                if (bullet.getBoundary().overlaps(currentHitbox.getBounds())) {
-                    bullet.remove();
-                    bullets.remove(bullet);
-                    break; // Beende die Schleife, wenn eine Kollision erkannt wurde
-                }
-            }
-        }
-
-        if (spieler.getBoundary().overlaps(hitbox.getBounds()) ||
-                spieler.getBoundary().overlaps(hitbox3.getBounds()) ||
-                spieler.getBoundary().overlaps(hitbox4.getBounds()) ||
-                spieler.getBoundary().overlaps(hitbox2.getBounds())) {
-            spieler.setPosition(previousX, previousY);
-            spieler.decreaseHealth(15); // Wenn der Spieler getroffen wird, werden 15 HP abgezogen
+        if (localPlayer.getBoundary().overlaps(hitbox.getBounds()) ||
+                localPlayer.getBoundary().overlaps(hitbox2.getBounds())) {
+            localPlayer.setPosition(previousX, previousY);
         } else {
-            previousX = spieler.getX();
-            previousY = spieler.getY();
+            previousX = localPlayer.getX();
+            previousY = localPlayer.getY();
         }
 
-        healthBar.setPosition(10, Gdx.graphics.getHeight() - 30); // Position des Balkens
-        healthBar.act(delta);
+        shotCooldownTimer -= delta; // Timer für Cooldown aktualisieren
 
         stage.act(delta);
         stage.draw();
@@ -119,6 +94,31 @@ public class GameScreen2 implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new TitleScreen(game));
             dispose();
+        }
+
+        sendPlayerCoordinates(localPlayer);
+    }
+
+    private void handleInput(float delta) {
+        localPlayer.move(-1);
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && localPlayer.getX() < 1780) localPlayer.move(1);
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && localPlayer.getX() > 980) localPlayer.move(0);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && localPlayer.getY() < 315) localPlayer.move(2);
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && localPlayer.getY() > 0) localPlayer.move(3);
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (shotCooldownTimer <= 0) {
+                float mouseX = Gdx.input.getX();
+                float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
+                if (localPlayer != null) {
+                    spawnBullet(localPlayer, mouseX, mouseY);
+                    shotCounter++;
+                    if (shotCounter >= SHOT_LIMIT) {
+                        shotCooldownTimer = COOLDOWN_DURATION;
+                        shotCounter = 0; // Zurücksetzen des Schusszählers nach dem Cooldown
+                    }
+                }
+            }
         }
     }
 
@@ -128,8 +128,8 @@ public class GameScreen2 implements Screen {
         float weaponY = spieler.getY() + 60;
         Vector2 direction = calculateBulletDirection(weaponX, weaponY, mouseX, mouseY);
         Bullet bullet = new Bullet(weaponX, weaponY, BULLET_SPEED, direction.x, direction.y, bulletTexture);
-        bullets.add(bullet);
         stage.addActor(bullet);
+        bullets.add(bullet); // Fügen Sie die Kugel der Liste hinzu
     }
 
     private Vector2 calculateBulletDirection(float weaponX, float weaponY, float mouseX, float mouseY) {
@@ -141,17 +141,39 @@ public class GameScreen2 implements Screen {
     }
 
     private void initStage() {
-        Texture spielerTexture = new Texture("images/jett.png");
-        if (spieler == null) {
-            spieler = new Spieler(1800, 0, spielerTexture, this);
-        }
+        Texture playerTexture = new Texture("images/jett.png");
+        localPlayer = new Spieler(1800, 0, playerTexture);
+        Texture enemyTexture = new Texture("animation/phnx.png");
+        remotePlayer = new Spieler(1800, 0, enemyTexture);
+
+        localHealthBar = new HealthBar(localPlayer, 200, 20);
+        remoteHealthBar = new HealthBar(remotePlayer, 200, 20);
+
         background = new GameActor(0, 0, new Texture("images/Map.png"));
         stage.addActor(background);
-        stage.addActor(spieler);
+        stage.addActor(localPlayer);
+        stage.addActor(remotePlayer);
+        stage.addActor(localHealthBar);
+        stage.addActor(remoteHealthBar);
         Gdx.input.setInputProcessor(stage);
+    }
 
-        healthBar = new HealthBar(spieler, 200, 20); // Breite und Höhe des Balkens
-        stage.addActor(healthBar); // Hinzufügen des healthBar Actors zur Bühne
+    private void sendPlayerCoordinates(Spieler spieler) {
+        if (webSocketClient != null) {
+            Vector2 coordinates = spieler.getCoordinates();
+            JSONObject message = new JSONObject();
+            JSONObject playerObject = new JSONObject();
+            playerObject.put("x", coordinates.x);
+            playerObject.put("y", coordinates.y);
+            message.put("player", playerObject);
+            webSocketClient.send(message.toString());
+        }
+    }
+
+    public void updateRemotePlayerCoordinates(float x, float y) {
+        if (remotePlayer != null) {
+            remotePlayer.setPosition(x, y);
+        }
     }
 
     @Override
