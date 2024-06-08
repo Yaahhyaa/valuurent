@@ -24,26 +24,27 @@ public class Spieler extends SpielObjekt {
     private Animation<TextureRegion> animationrechts;
     private Animation<TextureRegion> animationIdle;
     private Animation<TextureRegion> animationschiessen;
+    private Animation<TextureRegion> animationDeath; // Todesanimation hinzufügen
 
     private TextureRegion currentFrame;
     private TextureAtlas atlas;
     private boolean isAnimation = true;
     private float stateTime = 0;
     private GameScreen2 gameScreen;
-    private int health = 100;
+
+    private int health;
 
     public Spieler(int x, int y, Texture image) {
         super(x, y, image);
         boundary = new Rectangle();
-        this.setBoundary();
+        setBoundary();
 
         atlas = new TextureAtlas(Gdx.files.internal("animation/jet.atlas"));
-        Array<TextureAtlas.AtlasRegion> frames = new Array<>();
-
         animationIdle = new Animation<>(0.1f, atlas.findRegions("idle"), Animation.PlayMode.LOOP);
         animationlaufen = new Animation<>(0.1f, atlas.findRegions("laufen"), Animation.PlayMode.LOOP);
         animationrechts = new Animation<>(0.1f, atlas.findRegions("laufen"), Animation.PlayMode.LOOP);
         animationschiessen = new Animation<>(0.1f, atlas.findRegions("shoot"), Animation.PlayMode.LOOP);
+        animationDeath = new Animation<>(0.1f, atlas.findRegions("tot"), Animation.PlayMode.NORMAL);
 
         for (TextureRegion cFrame : animationrechts.getKeyFrames()) {
             cFrame.flip(true, false);
@@ -51,6 +52,8 @@ public class Spieler extends SpielObjekt {
         animation = animationIdle;
 
         this.gameScreen = gameScreen;
+
+        this.health = 100;
     }
 
     public Rectangle getBoundary() {
@@ -101,7 +104,7 @@ public class Spieler extends SpielObjekt {
         }
 
         this.direction = direction;
-        this.setBoundary();
+        setBoundary();
         this.getImage().setX(this.getX());
         this.getImage().setY(this.getY());
     }
@@ -112,7 +115,7 @@ public class Spieler extends SpielObjekt {
 
     public void act(float delta) {
         super.act(delta);
-        this.update(delta);
+        update(delta);
     }
 
     public boolean collidRectangle(Rectangle shape) {
@@ -129,11 +132,19 @@ public class Spieler extends SpielObjekt {
         return health;
     }
 
-    public float getMaxHealth() {
-        return 100;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    public void decreaseHealth(int i) {
-        health = health - i;
+    public void takeDamage(int damage) {
+        this.health -= damage;
+        if (this.health <= 0) {
+            this.health = 0;
+            setAnimationToDeath();
+        }
+    }
+
+    private void setAnimationToDeath() {
+        animation = animationDeath;
     }
 }

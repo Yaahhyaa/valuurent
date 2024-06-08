@@ -37,14 +37,14 @@ public class HealthBar extends Actor {
         shapeRenderer.rect(10, 20, width, height);
 
         shapeRenderer.setColor(Color.GREEN);
-        float healthWidth = width * ((float) spieler.getHealth() / spieler.getMaxHealth());
-        shapeRenderer.rect(10, 20, healthWidth, height);
+      //  float healthWidth = width * ((float) spieler.getHealth() / spieler.getMaxHealth());
+     //   shapeRenderer.rect(10, 20, healthWidth, height);
 
         shapeRenderer.end();
 
         batch.begin();
 
-        font.draw(batch, (int) spieler.getHealth() + " | " + (int) spieler.getMaxHealth(), 20, 40);
+     //   font.draw(batch, (int) spieler.getHealth() + " | " + (int) spieler.getMaxHealth(), 20, 40);
     }
 
 

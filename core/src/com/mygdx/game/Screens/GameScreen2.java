@@ -1,19 +1,15 @@
 package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Character.Bullet;
-import com.mygdx.game.Character.GameActor;
-import com.mygdx.game.Character.Hitbox;
-import com.mygdx.game.Character.Spieler;
-import com.mygdx.game.Character.HealthBar;
+import com.mygdx.game.Character.*;
 import com.mygdx.game.Client.GameWebSocketClient;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -40,6 +36,7 @@ public class GameScreen2 implements Screen {
     private HealthBar localHealthBar;
     private HealthBar remoteHealthBar;
     private GameWebSocketClient webSocketClient;
+    private Sound bulletSound;
 
     public GameScreen2(Game aGame) {
         game = aGame;
@@ -52,13 +49,15 @@ public class GameScreen2 implements Screen {
         bullets = new ArrayList<>();
         shotCounter = 0;
         shotCooldownTimer = 0;
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("Music/Bullet (2).mp3"));
 
-        try {
-            webSocketClient = new GameWebSocketClient(this);
+
+       /* try {
+            webSocketClient = new GameWebSocketClient("player1");
             webSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -97,6 +96,7 @@ public class GameScreen2 implements Screen {
         }
 
         sendPlayerCoordinates(localPlayer);
+
     }
 
     private void handleInput(float delta) {
@@ -106,12 +106,14 @@ public class GameScreen2 implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.W) && localPlayer.getY() < 315) localPlayer.move(2);
         if (Gdx.input.isKeyPressed(Input.Keys.S) && localPlayer.getY() > 0) localPlayer.move(3);
 
+
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
             if (shotCooldownTimer <= 0) {
                 float mouseX = Gdx.input.getX();
                 float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
                 if (localPlayer != null) {
                     spawnBullet(localPlayer, mouseX, mouseY);
+                    bulletSound.play();
                     shotCounter++;
                     if (shotCounter >= SHOT_LIMIT) {
                         shotCooldownTimer = COOLDOWN_DURATION;
@@ -141,20 +143,18 @@ public class GameScreen2 implements Screen {
     }
 
     private void initStage() {
-        Texture playerTexture = new Texture("images/jett.png");
+        Texture playerTexture = new Texture("animation/phnx.png");
         localPlayer = new Spieler(1800, 0, playerTexture);
-        Texture enemyTexture = new Texture("animation/phnx.png");
-        remotePlayer = new Spieler(1800, 0, enemyTexture);
 
         localHealthBar = new HealthBar(localPlayer, 200, 20);
-        remoteHealthBar = new HealthBar(remotePlayer, 200, 20);
+       // remoteHealthBar = new HealthBar(remotePlayer, 200, 20);
 
         background = new GameActor(0, 0, new Texture("images/Map.png"));
         stage.addActor(background);
         stage.addActor(localPlayer);
-        stage.addActor(remotePlayer);
+        //stage.addActor(remotePlayer);
         stage.addActor(localHealthBar);
-        stage.addActor(remoteHealthBar);
+        //stage.addActor(remoteHealthBar);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -169,6 +169,8 @@ public class GameScreen2 implements Screen {
             webSocketClient.send(message.toString());
         }
     }
+
+
 
     public void updateRemotePlayerCoordinates(float x, float y) {
         if (remotePlayer != null) {
@@ -195,5 +197,6 @@ public class GameScreen2 implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        bulletSound.dispose();
     }
 }
