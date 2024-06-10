@@ -1,6 +1,7 @@
 package com.mygdx.game.Screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -13,9 +14,7 @@ import com.mygdx.game.Character.Spieler;
 import com.mygdx.game.Character.HealthBar;
 import com.mygdx.game.Client.GameWebSocketClient;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class GameScreen2 implements Screen {
@@ -40,6 +39,7 @@ public class GameScreen2 implements Screen {
     private HealthBar localHealthBar;
     private HealthBar remoteHealthBar;
     private GameWebSocketClient webSocketClient;
+    private Sound bulletSound;  // Schuss-Sound
 
     public GameScreen2(Game aGame) {
         game = aGame;
@@ -52,13 +52,7 @@ public class GameScreen2 implements Screen {
         bullets = new ArrayList<>();
         shotCounter = 0;
         shotCooldownTimer = 0;
-
-        try {
-            webSocketClient = new GameWebSocketClient(this);
-            webSocketClient.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("Sounds/Bullet.mp3")); // Lade den Schuss-Sound
     }
 
     @Override
@@ -112,6 +106,7 @@ public class GameScreen2 implements Screen {
                 float mouseY = Gdx.graphics.getHeight() - Gdx.input.getY();
                 if (localPlayer != null) {
                     spawnBullet(localPlayer, mouseX, mouseY);
+                    bulletSound.play(); // Schuss-Sound abspielen
                     shotCounter++;
                     if (shotCounter >= SHOT_LIMIT) {
                         shotCooldownTimer = COOLDOWN_DURATION;
@@ -195,5 +190,6 @@ public class GameScreen2 implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        bulletSound.dispose(); // Schuss-Sound entsorgen
     }
 }
