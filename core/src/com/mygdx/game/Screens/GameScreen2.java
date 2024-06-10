@@ -54,7 +54,7 @@ public class GameScreen2 implements Screen {
         shotCooldownTimer = 0;
 
         try {
-            webSocketClient = new GameWebSocketClient(this);
+            webSocketClient = new GameWebSocketClient( "player");
             webSocketClient.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
