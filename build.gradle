@@ -1,6 +1,4 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -11,9 +9,6 @@ buildscript {
     dependencies {
         classpath 'org.docstr:gwt-gradle-plugin:1.1.29'
         classpath 'org.gretty:gretty:3.1.0'
-
-        
-
     }
 }
 
@@ -45,12 +40,10 @@ allprojects {
 project(":desktop") {
     apply plugin: "java-library"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        
     }
 }
 
@@ -60,20 +53,17 @@ project(":html") {
     apply plugin: "war"
     apply plugin: "org.gretty"
 
-
     dependencies {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
         api "com.google.jsinterop:jsinterop-annotations:2.0.2:sources"
-        
     }
 }
 
 project(":core") {
     apply plugin: "java-library"
-
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -81,5 +71,9 @@ project(":core") {
         implementation 'org.java-websocket:Java-WebSocket:1.5.2'
         implementation 'com.google.code.gson:gson:2.8.8'
         implementation 'org.json:json:20210307'
+
+        // SLF4J API and Logback for logging
+        implementation 'org.slf4j:slf4j-api:2.0.0'
+        implementation 'ch.qos.logback:logback-classic:1.2.3'
     }
 }
